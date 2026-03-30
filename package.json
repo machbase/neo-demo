@@ -1,5 +1,5 @@
 {
-  "name": "hello",
+  "name": "neo-hello",
   "version": "1.0.0",
   "scripts": {"greet": "hello.js"},
   "dependencies": {}
