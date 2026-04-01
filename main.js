@@ -28,6 +28,11 @@ const COMMANDS = {
 		description: 'Mach CLI query',
 		usage: 'demo machcli-query',
 	},
+	mustache: {
+		script: 'mustache_demo.js',
+		description: 'render a Mustache template',
+		usage: 'demo mustache [--template <text>] [--name <name>] [--company <name>] [--topic <text>] [--view <json>]',
+	},
 	readline: {
 		script: 'readline.js',
 		description: 'interactive line input',

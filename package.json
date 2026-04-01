@@ -6,5 +6,7 @@
     "demo": "main.js"
   },
   "scripts": {"greet": "hello.js"},
-  "dependencies": {}
+  "dependencies": {
+    "mustache": "^4.2.0"
+  }
 }
