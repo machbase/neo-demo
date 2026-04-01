@@ -18,6 +18,11 @@ const COMMANDS = {
 		description: 'HTTP server',
 		usage: 'demo server --port <7575>',
 	},
+	'server-install': {
+		script: 'server_install.js',
+		description: 'register HTTP server service',
+		usage: 'demo server-install --port <num>',
+	},
 	'machcli-query': {
 		script: 'machcli_query.js',
 		description: 'Mach CLI query',
