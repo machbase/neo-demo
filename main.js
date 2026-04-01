@@ -3,8 +3,26 @@
 const process = require('process');
 
 const COMMANDS = {
-	hello: 'hello.js',
-	'machcli-query': 'machcli_query.js',
+	argv: {
+		script: 'argv.js',
+		description: 'argv index values',
+		usage: 'demo argv [value]',
+	},
+	hello: {
+		script: 'hello.js',
+		description: 'greeting output',
+		usage: 'demo hello [name]',
+	},
+	server: {
+		script: 'server.js',
+		description: 'HTTP server',
+		usage: 'demo server --port <7575>',
+	},
+	'machcli-query': {
+		script: 'machcli_query.js',
+		description: 'Mach CLI query',
+		usage: 'demo machcli-query',
+	},
 };
 
 function dirname(filePath) {
@@ -39,22 +57,47 @@ function joinPath(basePath, fileName) {
 	return `${basePath}/${fileName}`;
 }
 
+function padRight(value, width) {
+	let result = value;
+
+	while (result.length < width) {
+		result += ' ';
+	}
+
+	return result;
+}
+
+function printCommands(heading) {
+	const commandNames = Object.keys(COMMANDS);
+	const maxCommandLength = commandNames.reduce((maxLength, command) => {
+		return Math.max(maxLength, command.length);
+	}, 0);
+
+	console.println(heading);
+	commandNames.forEach((command) => {
+		const meta = COMMANDS[command];
+		const label = padRight(command, maxCommandLength);
+
+		console.println(`  ${label}  ${meta.description}`);
+		console.println(`    usage: ${meta.usage}`);
+	});
+}
+
 function printUsage() {
-	console.error('Usage: demo <command> <flags...> <args...>');
-	console.error('');
-	console.error('Commands:');
-	console.error('  hello');
-	console.error('  machcli-query');
+	console.println('Usage:');
+	console.println('  demo <command> <flags...> <args...>');
+	console.println('');
+	printCommands('Commands:');
 }
 
 function resolveCommand(commandName) {
-	const scriptName = COMMANDS[commandName];
+	const command = COMMANDS[commandName];
 
-	if (!scriptName) {
+	if (!command) {
 		return null;
 	}
 
-	return joinPath(dirname(process.argv[1]), scriptName);
+	return joinPath(dirname(process.argv[1]), command.script);
 }
 
 const argv = process.argv.slice(2);
@@ -69,8 +112,8 @@ const commandPath = resolveCommand(commandName);
 
 if (!commandPath) {
 	console.error(`Unknown command: ${commandName}`);
-	console.error('');
-	printUsage();
+	console.println('');
+	printCommands('Available commands:');
 	process.exit(1);
 }
 
