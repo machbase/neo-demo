@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "main.js",
   "bin": {
-    "greeting": "hello.js"
+    "demo": "main.js"
   },
   "scripts": {"greet": "hello.js"},
   "dependencies": {}
