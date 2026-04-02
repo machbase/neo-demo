@@ -24,6 +24,15 @@ pkg install -g github.com/machbase/neo-demo
 `demo mustache` 는 이 저장소에서 외부 npm dependency 사용 가능 여부를 확인하기 위한 데모로,
 `pkg install` 로 설치된 npm dependency 가 JSH 런타임에서 실제로 `require('mustache')` 되어 동작하는지 확인하는 용도입니다.
 
+이 저장소는 데모 실행 재현성을 위해 `package-lock.json` 을 함께 관리합니다. npm dependency 버전을 고정해 환경별 설치 차이로 예제가 달라지거나 깨지는 일을 줄이기 위한 목적입니다.
+
+다른 JSH 패키지를 작성할 때도 같은 기준으로 판단할 수 있습니다.
+
+- 데모, 튜토리얼, CLI, 서버처럼 실행 결과를 그대로 재현하는 것이 중요한 패키지는 `package-lock.json` 을 저장소에 포함하는 편이 좋습니다.
+- 여러 개발자가 같은 예제를 따라 하거나 문서의 실행 결과를 검증해야 한다면 lockfile 공유가 기본값에 가깝습니다.
+- 반대로 다른 애플리케이션이 가져다 쓰는 범용 라이브러리 패키지라면 `package-lock.json` 을 꼭 배포 기준으로 삼을 필요는 없고, 의존성 범위를 어떻게 열어둘지 정책을 먼저 정하는 편이 낫습니다.
+- 어느 경우든 `node_modules/` 는 저장소에 포함하지 않고, lockfile 을 포함할지 제외할지만 별도로 결정하면 됩니다.
+
 ## 실행 예시
 
 ```sh

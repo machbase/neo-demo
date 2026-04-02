@@ -10,6 +10,7 @@ const Mustache = require('mustache');
 const DEFAULT_PORT = 7575;
 const HOME_TEMPLATE = loadTemplate('home.mustache.html');
 const TODO_TEMPLATE = loadTemplate('todo.mustache.html');
+const STATIC_DIR = path.join(resolveScriptDir(), 'static');
 const ENDPOINTS = [
     {
         path: '/',
@@ -19,7 +20,7 @@ const ENDPOINTS = [
     {
         path: '/greeting',
         title: 'Greeting JSON',
-        description: 'Small JSON response used as the simplest HTTP handler example.',
+        description: 'Small JSON response used as the simplest HTTP handler example, with an optional name query parameter.',
     },
     {
         path: '/system',
@@ -66,14 +67,25 @@ function loadTemplate(fileName) {
 }
 
 function buildHomeView() {
+    const linkedEndpoints = ENDPOINTS.filter((endpoint) => endpoint.path !== '/');
+
     return {
         pageTitle: 'Neo Demo Server',
-        endpointCount: ENDPOINTS.length,
-        endpoints: ENDPOINTS.map((endpoint) => ({
-            path: endpoint.path,
-            title: endpoint.title,
-            description: endpoint.description,
-        })),
+        endpointCount: linkedEndpoints.length,
+        endpoints: linkedEndpoints.map((endpoint) => {
+            const hasQueryForm = endpoint.path === '/greeting';
+
+            return {
+                path: endpoint.path,
+                title: endpoint.title,
+                description: endpoint.description,
+                hasQueryForm,
+                queryInputId: hasQueryForm ? 'greeting-name' : '',
+                queryParamName: hasQueryForm ? 'name' : '',
+                queryParamLabel: hasQueryForm ? 'name:' : '',
+                queryPlaceholder: hasQueryForm ? 'world' : '',
+            };
+        }),
     };
 }
 
@@ -82,6 +94,14 @@ function renderHomePage(ctx) {
 
     ctx.setHeader('Content-Type', 'text/html; charset=utf-8');
     ctx.text(http.status.OK, html);
+}
+
+function normalizeGreetingName(value) {
+    if (typeof value !== 'string') {
+        return '';
+    }
+
+    return value.trim();
 }
 
 function normalizeTodoTitle(value) {
@@ -293,14 +313,22 @@ try {
 const server = new http.Server({
     network: 'tcp',
     address: `0.0.0.0:${port}`,
+    env: process.env,
 });
+
+server.static('/static', STATIC_DIR);
 
 server.get('/', (ctx) => {
     renderHomePage(ctx);
 });
 
 server.get('/greeting', (ctx) => {
-    ctx.json(http.status.OK, { message: 'hello world' });
+    const name = normalizeGreetingName(ctx.query('name')) || 'world';
+
+    ctx.json(http.status.OK, {
+        message: `hello ${name}`,
+        name,
+    });
 });
 
 server.get('/system', (ctx) => {
