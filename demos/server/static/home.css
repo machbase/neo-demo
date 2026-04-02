@@ -172,7 +172,7 @@ h1 {
     font-size: var(--meta-size);
 }
 
-.endpoint-query-input {
+.endpoint-query-control {
     min-width: 180px;
     padding: 13px 14px;
     border: 1px solid var(--border);
@@ -206,7 +206,7 @@ h1 {
         width: 100%;
     }
 
-    .endpoint-query-input {
+    .endpoint-query-control {
         width: 100%;
     }
 }

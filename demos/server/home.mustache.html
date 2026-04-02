@@ -30,8 +30,18 @@
                 </div>
                 {{#hasQueryForm}}
                 <form class="endpoint-query-form" method="get" action="{{path}}">
+                    {{#hasTextQuery}}
                     <label class="endpoint-query-label" for="{{queryInputId}}">{{queryParamLabel}}</label>
-                    <input class="endpoint-query-input" id="{{queryInputId}}" type="text" name="{{queryParamName}}" placeholder="{{queryPlaceholder}}" autocomplete="off">
+                    <input class="endpoint-query-control" id="{{queryInputId}}" type="text" name="{{queryParamName}}" placeholder="{{queryPlaceholder}}" autocomplete="off">
+                    {{/hasTextQuery}}
+                    {{#hasSelectQuery}}
+                    <label class="endpoint-query-label" for="{{querySelectId}}">{{querySelectLabel}}</label>
+                    <select class="endpoint-query-control" id="{{querySelectId}}" name="{{querySelectName}}">
+                        {{#queryOptions}}
+                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/queryOptions}}
+                    </select>
+                    {{/hasSelectQuery}}
                     <button class="endpoint-link endpoint-submit" type="submit">Open endpoint</button>
                 </form>
                 {{/hasQueryForm}}
