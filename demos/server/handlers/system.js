@@ -89,11 +89,11 @@ function handleSystem(ctx) {
     }
 
     if (format === 'xml') {
-        ctx.xml(http.status.OK, systemInfo);
+        ctx.xml(http.status.OK, systemInfo, { root: 'system' });
         return;
     }
 
-    ctx.json(http.status.OK, systemInfo, { indent: true });
+    ctx.json(http.status.OK, systemInfo, { space: 2 });
 }
 
 module.exports = {
