@@ -76,7 +76,7 @@ try {
 }
 
 const client = new service.Client();
-const serverPath = joinPath(dirname(process.argv[1]), 'server.js');
+const serverPath = joinPath(dirname(process.argv[1]), 'index.js');
 
 client.install({
 	name: 'demo-server',

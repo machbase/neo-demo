@@ -4,37 +4,37 @@ const process = require('process');
 
 const COMMANDS = {
 	argv: {
-		script: 'argv.js',
+		script: 'demos/argv/index.js',
 		description: 'argv index values',
 		usage: 'demo argv [value]',
 	},
 	hello: {
-		script: 'hello.js',
+		script: 'demos/hello/index.js',
 		description: 'greeting output',
 		usage: 'demo hello [name]',
 	},
 	server: {
-		script: 'server.js',
+		script: 'demos/server/index.js',
 		description: 'HTTP server',
 		usage: 'demo server --port <7575>',
 	},
 	'server-install': {
-		script: 'server_install.js',
+		script: 'demos/server/install.js',
 		description: 'register HTTP server service',
 		usage: 'demo server-install --port <num>',
 	},
 	'machcli-query': {
-		script: 'machcli_query.js',
+		script: 'demos/machcli/query.js',
 		description: 'Mach CLI query',
 		usage: 'demo machcli-query',
 	},
 	mustache: {
-		script: 'mustache_demo.js',
+		script: 'demos/mustache/index.js',
 		description: 'npm dependency demo with Mustache',
 		usage: 'demo mustache [--template <text>] [--name <name>] [--company <name>] [--topic <text>] [--view <json>]',
 	},
 	readline: {
-		script: 'readline.js',
+		script: 'demos/readline/index.js',
 		description: 'interactive line input',
 		usage: 'demo readline [--auto <text>]',
 	},
