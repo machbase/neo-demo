@@ -96,8 +96,8 @@ function buildTodoView(message) {
             id: item.id,
             title: item.title,
             completed: item.completed,
-            toggleLink: `/todo?toggle=${item.id}`,
-            removeLink: `/todo?remove=${item.id}`,
+            toggleLink: `todo?toggle=${item.id}`,
+            removeLink: `todo?remove=${item.id}`,
             toggleActionText: item.completed ? 'Mark open' : 'Complete',
             statusText: item.completed ? 'Done' : 'Open',
         })),
@@ -122,7 +122,7 @@ function handleTodoMutation(ctx) {
         }
 
         addTodoItem(title);
-        ctx.redirect(http.status.Found, '/todo');
+        ctx.redirect(http.status.Found, 'todo');
         return { redirected: true };
     }
 
@@ -133,7 +133,7 @@ function handleTodoMutation(ctx) {
             return { message: `Todo item ${toggleId} was not found.` };
         }
 
-        ctx.redirect(http.status.Found, '/todo');
+        ctx.redirect(http.status.Found, 'todo');
         return { redirected: true };
     }
 
@@ -144,7 +144,7 @@ function handleTodoMutation(ctx) {
             return { message: `Todo item ${removeId} was not found.` };
         }
 
-        ctx.redirect(http.status.Found, '/todo');
+        ctx.redirect(http.status.Found, 'todo');
         return { redirected: true };
     }
 

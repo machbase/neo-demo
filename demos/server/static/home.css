@@ -94,6 +94,29 @@ h1 {
     line-height: 1.5;
 }
 
+.proxy-note {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.82);
+}
+
+.proxy-note strong {
+    color: var(--accent-strong);
+    font-size: var(--meta-size);
+}
+
+.proxy-note a {
+    color: var(--accent);
+    overflow-wrap: anywhere;
+    font-size: var(--meta-size);
+}
+
 .grid {
     margin-top: 22px;
     display: grid;

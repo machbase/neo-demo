@@ -24,9 +24,10 @@ demo -h
 
 - `demo hello [name]`: 간단한 인사 출력
 - `demo argv [value]`: 전달된 인자 확인
-- `demo server --port <port>`: 예제 HTTP 서버 실행
-  - `/`, `/greeting`, `/system`, `/todo` 엔드포인트를 확인할 수 있습니다.
-- `demo server-install --port <port>`: 서버 스크립트를 서비스로 등록
+- `demo server --port <port> [--proxy]`: 예제 HTTP 서버 실행
+  - `/`, `/greeting`, `/system`, `/todo`, `/healthz` 엔드포인트를 확인할 수 있습니다.
+  - `--proxy` 를 함께 쓰면 JSH service proxy 를 등록해서 `/web/services/<service-name>/<proxy-prefix>/` 경로로 같은 웹 앱을 reverse proxy 합니다.
+- `demo server-install --port <port>`: 서버 스크립트를 service proxy 옵션과 함께 서비스로 등록
 - `demo machcli-query`: Machbase 조회 예제 실행
 - `demo mustache [options]`: npm package dependency 로 설치한 Mustache를 JSH에서 불러와 렌더링하는 예제
 - `demo readline [--auto <text>]`: `readline` 입력 예제 실행
@@ -68,6 +69,20 @@ demo server --port 7575
 
 서버를 실행한 뒤 브라우저에서 `http://127.0.0.1:7575/` 로 접속하면 엔드포인트 목록 페이지를 볼 수 있고, `http://127.0.0.1:7575/todo` 에서는 Mustache 템플릿으로 렌더링되는 간단한 웹 TODO 예제를 확인할 수 있습니다.
 
+서비스로 실행하면서 Machbase Neo 웹 경로 아래의 reverse proxy 동작을 확인하려면 서비스를 등록합니다. 등록된 서비스가 시작되면 서버가 `service.proxy.register()` 를 호출해서 `http://127.0.0.1:<port>` 로 들어오는 로컬 서버를 Neo 웹 경로에 노출합니다.
+
+```sh
+demo server-install --port 7575
+```
+
+기본 proxy 공개 경로는 아래와 같습니다.
+
+```text
+/web/services/github.com/machbase/neo-demo/server/demo/
+```
+
+Neo 웹 UI 또는 같은 origin의 브라우저에서 위 경로에 접속하면 `/greeting`, `/system`, `/todo`, `/static/...` 요청이 모두 서비스 서버로 전달됩니다. service name과 prefix를 바꾸려면 `--service-name <name>` 과 `--proxy-prefix <prefix>` 를 사용할 수 있습니다.
+
 ![server](./docs/neo-demo-server.jpg)
 
 
@@ -79,7 +94,7 @@ demo server --port 7575
 - `demos/server/index.js`: HTTP API 예제
 - `demos/server/home.mustache.html`: `/` 엔드포인트 템플릿
 - `demos/server/todo.mustache.html`: `/todo` 엔드포인트 템플릿
-- `demos/server/install.js`: 서비스 설치 예제
+- `demos/server/install.js`: service proxy 옵션을 포함한 서비스 설치 예제
 - `demos/machcli/query.js`: Mach CLI 조회 예제
 - `demos/machcli/machcli.json`: Mach CLI 연결 설정 예제
 - `demos/mustache/index.js`: npm dependency Mustache 렌더링 예제

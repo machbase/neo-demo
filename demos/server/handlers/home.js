@@ -28,14 +28,22 @@ const ENDPOINTS = [
         title: 'Mustache todo page',
         description: 'Interactive web todo example rendered with Mustache and updated through query actions.',
     },
+    {
+        path: '/healthz',
+        title: 'Proxy health check',
+        description: 'Small text response used as the service proxy healthPath target when this server registers itself with Neo.',
+    },
 ];
 
-function buildHomeView() {
+function buildHomeView(options) {
     const linkedEndpoints = ENDPOINTS.filter((endpoint) => endpoint.path !== '/');
+    const viewOptions = options || {};
 
     return {
         pageTitle: 'Neo Demo Server',
         endpointCount: linkedEndpoints.length,
+        proxyEnabled: viewOptions.proxyEnabled,
+        proxyPath: viewOptions.proxyPath,
         endpoints: linkedEndpoints.map((endpoint) => {
             const hasGreetingQuery = endpoint.path === '/greeting';
             const hasFormatQuery = endpoint.path === '/system';
@@ -43,6 +51,7 @@ function buildHomeView() {
 
             return {
                 path: endpoint.path,
+                linkPath: endpoint.path.substring(1),
                 title: endpoint.title,
                 description: endpoint.description,
                 hasQueryForm,
@@ -65,8 +74,8 @@ function buildHomeView() {
     };
 }
 
-function renderHomePage(ctx) {
-    const html = Mustache.render(HOME_TEMPLATE, buildHomeView());
+function renderHomePage(ctx, options) {
+    const html = Mustache.render(HOME_TEMPLATE, buildHomeView(options));
 
     ctx.setHeader('Content-Type', 'text/html; charset=utf-8');
     ctx.text(http.status.OK, html);

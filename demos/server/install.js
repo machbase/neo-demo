@@ -2,6 +2,12 @@
 
 const process = require('process');
 const service = require('service');
+const {
+	DEFAULT_PROXY_PREFIX,
+	DEFAULT_PROXY_SERVICE,
+	normalizeProxyPrefix,
+	normalizeProxyService,
+} = require('./support');
 
 function dirname(filePath) {
 	if (!filePath) {
@@ -49,26 +55,74 @@ function normalizePort(value) {
 	return port;
 }
 
-function parsePort(argv) {
+function readOptionValue(argv, index, optionName) {
+	const value = argv[index + 1];
+
+	if (value === undefined || value === null || value === '' || value.indexOf('--') === 0) {
+		throw new Error(`missing value for ${optionName}`);
+	}
+
+	return value;
+}
+
+function parseOptions(argv) {
+	const options = {
+		port: null,
+		serviceName: DEFAULT_PROXY_SERVICE,
+		proxyPrefix: DEFAULT_PROXY_PREFIX,
+	};
+
 	for (let index = 0; index < argv.length; index += 1) {
 		const arg = argv[index];
 
 		if (arg === '--port') {
-			return normalizePort(argv[index + 1]);
+			options.port = normalizePort(readOptionValue(argv, index, '--port'));
+			index += 1;
+			continue;
+		}
+
+		if (arg.indexOf('--port=') === 0) {
+			options.port = normalizePort(arg.substring('--port='.length));
+			continue;
+		}
+
+		if (arg === '--service-name') {
+			options.serviceName = normalizeProxyService(readOptionValue(argv, index, '--service-name'));
+			index += 1;
+			continue;
+		}
+
+		if (arg.indexOf('--service-name=') === 0) {
+			options.serviceName = normalizeProxyService(arg.substring('--service-name='.length));
+			continue;
+		}
+
+		if (arg === '--proxy-prefix') {
+			options.proxyPrefix = normalizeProxyPrefix(readOptionValue(argv, index, '--proxy-prefix'));
+			index += 1;
+			continue;
+		}
+
+		if (arg.indexOf('--proxy-prefix=') === 0) {
+			options.proxyPrefix = normalizeProxyPrefix(arg.substring('--proxy-prefix='.length));
 		}
 	}
 
-	throw new Error('missing required --port <num>');
+	if (options.port === null) {
+		throw new Error('missing required --port <num>');
+	}
+
+	return options;
 }
 
 function usage() {
-	console.println('Usage: server_install.js --port <num>');
+	console.println('Usage: server_install.js --port <num> [--service-name <name>] [--proxy-prefix <prefix>]');
 }
 
-let port;
+let options;
 
 try {
-	port = parsePort(process.argv.slice(2));
+	options = parseOptions(process.argv.slice(2));
 } catch (error) {
 	console.println(`Error: ${error.message}`);
 	usage();
@@ -82,7 +136,12 @@ client.install({
 	name: 'demo-server',
 	enable: false,
 	executable: serverPath,
-	args: ['--port', String(port)],
+	args: [
+		'--port', String(options.port),
+		'--proxy',
+		'--service-name', options.serviceName,
+		'--proxy-prefix', options.proxyPrefix,
+	],
 }, (error, snapshot) => {
 	if (error) {
 		console.println(`Error: ${error.message}`);

@@ -16,12 +16,12 @@ const COMMANDS = {
 	server: {
 		script: 'demos/server/index.js',
 		description: 'HTTP server',
-		usage: 'demo server --port <7575>',
+		usage: 'demo server [--port <7575>] [--proxy] [--service-name <name>] [--proxy-prefix <prefix>]',
 	},
 	'server-install': {
 		script: 'demos/server/install.js',
-		description: 'register HTTP server service',
-		usage: 'demo server-install --port <num>',
+		description: 'register HTTP server service with proxy args',
+		usage: 'demo server-install --port <num> [--service-name <name>] [--proxy-prefix <prefix>]',
 	},
 	'machcli-query': {
 		script: 'demos/machcli/query.js',

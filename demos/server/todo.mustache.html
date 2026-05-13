@@ -5,14 +5,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{pageTitle}}</title>
-    <link rel="stylesheet" href="/static/todo.css">
+    <link rel="stylesheet" href="static/todo.css">
 </head>
 
 <body>
     <main class="shell">
         <section class="hero">
             <article class="card intro">
-                <a class="home-link" href="/">&larr; Back to home</a>
+                <a class="home-link" href="./">&larr; Back to home</a>
                 <span class="eyebrow">Mustache + JSH</span>
                 <h1>Todo list for the Neo demo server.</h1>
                 <p class="lede">
@@ -49,7 +49,7 @@
             <div class="message">{{message}}</div>
             {{/hasMessage}}
 
-            <form class="composer" method="get" action="/todo">
+            <form class="composer" method="get" action="todo">
                 <input type="text" name="title" placeholder="Add a task for the demo page" autocomplete="off">
                 <button type="submit">Add item</button>
             </form>
