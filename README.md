@@ -24,9 +24,11 @@ demo -h
 
 - `demo hello [name]`: 간단한 인사 출력
 - `demo argv [value]`: 전달된 인자 확인
-- `demo server --port <port> [--proxy]`: 예제 HTTP 서버 실행
+- `demo server --port <port>`: 예제 HTTP 서버 실행 및 JSH service proxy 기본 등록
   - `/`, `/greeting`, `/system`, `/todo`, `/healthz` 엔드포인트를 확인할 수 있습니다.
-  - `--proxy` 를 함께 쓰면 JSH service proxy 를 등록해서 `/web/services/<service-name>/<proxy-prefix>/` 경로로 같은 웹 앱을 reverse proxy 합니다.
+  - 기본적으로 JSH service proxy 를 등록해서 `/web/services/<service-name>/<proxy-prefix>/` 경로로 같은 웹 앱을 reverse proxy 합니다.
+  - 서버 시작 로그에 직접 연결 주소와 Neo web proxy 연결 주소가 함께 출력됩니다.
+  - proxy 등록 없이 HTTP 서버만 확인하려면 `--no-proxy` 를 사용할 수 있습니다.
 - `demo server-install --port <port>`: 서버 스크립트를 service proxy 옵션과 함께 서비스로 등록
 - `demo machcli-query`: Machbase 조회 예제 실행
 - `demo mustache [options]`: npm package dependency 로 설치한 Mustache를 JSH에서 불러와 렌더링하는 예제
@@ -67,9 +69,18 @@ demo mustache --name Neo --topic "npm package demo"
 demo server --port 7575
 ```
 
-서버를 실행한 뒤 브라우저에서 `http://127.0.0.1:7575/` 로 접속하면 엔드포인트 목록 페이지를 볼 수 있고, `http://127.0.0.1:7575/todo` 에서는 Mustache 템플릿으로 렌더링되는 간단한 웹 TODO 예제를 확인할 수 있습니다.
+서버를 실행하면 HTTP 서버가 시작되고, 기본적으로 `service.proxy.register()` 를 호출해서 `http://127.0.0.1:7575` 로 들어오는 로컬 서버를 Neo 웹 경로에 노출합니다. 브라우저에서 `http://127.0.0.1:7575/` 로 직접 접속하면 엔드포인트 목록 페이지를 볼 수 있고, `http://127.0.0.1:7575/todo` 에서는 Mustache 템플릿으로 렌더링되는 간단한 웹 TODO 예제를 확인할 수 있습니다.
 
-서비스로 실행하면서 Machbase Neo 웹 경로 아래의 reverse proxy 동작을 확인하려면 서비스를 등록합니다. 등록된 서비스가 시작되면 서버가 `service.proxy.register()` 를 호출해서 `http://127.0.0.1:<port>` 로 들어오는 로컬 서버를 Neo 웹 경로에 노출합니다.
+시작 로그에는 아래처럼 테스트에 바로 사용할 수 있는 URL 이 출력됩니다.
+
+```text
+direct connection: http://127.0.0.1:7575/
+proxy connection: http://127.0.0.1:5654/web/services/github.com/machbase/neo-demo/server/demo/
+```
+
+Neo web 포트가 5654가 아니면 `--neo-web-port <port>` 로 출력되는 proxy 연결 주소를 맞출 수 있습니다.
+
+서비스로 실행하면서 Machbase Neo 웹 경로 아래의 reverse proxy 동작을 확인하려면 서비스를 등록합니다. 등록된 서비스도 같은 기본 proxy 설정으로 시작됩니다.
 
 ```sh
 demo server-install --port 7575

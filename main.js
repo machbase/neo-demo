@@ -15,8 +15,8 @@ const COMMANDS = {
 	},
 	server: {
 		script: 'demos/server/index.js',
-		description: 'HTTP server',
-		usage: 'demo server [--port <7575>] [--proxy] [--service-name <name>] [--proxy-prefix <prefix>]',
+		description: 'HTTP server with service proxy',
+		usage: 'demo server [--port <7575>] [--no-proxy] [--service-name <name>] [--proxy-prefix <prefix>] [--neo-web-port <5654>]',
 	},
 	'server-install': {
 		script: 'demos/server/install.js',

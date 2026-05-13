@@ -5,6 +5,7 @@ const path = require('path');
 const process = require('process');
 
 const DEFAULT_PORT = 7575;
+const DEFAULT_NEO_WEB_PORT = 5654;
 const DEFAULT_PROXY_SERVICE = 'github.com/machbase/neo-demo/server';
 const DEFAULT_PROXY_PREFIX = '/demo/';
 
@@ -33,6 +34,20 @@ function normalizePort(value) {
     }
 
     return port;
+}
+
+function normalizeNeoWebPort(value) {
+    if (value === undefined || value === null || value === '') {
+        throw new Error('missing value for --neo-web-port');
+    }
+
+    const neoWebPort = Number(value);
+
+    if (!Number.isInteger(neoWebPort) || neoWebPort < 1 || neoWebPort > 65535) {
+        throw new Error(`invalid Neo web port: ${value}`);
+    }
+
+    return neoWebPort;
 }
 
 function normalizeProxyService(value) {
@@ -91,7 +106,8 @@ function readOptionValue(argv, index, optionName) {
 function parseServerOptions(argv) {
     const options = {
         port: DEFAULT_PORT,
-        proxy: false,
+        neoWebPort: DEFAULT_NEO_WEB_PORT,
+        proxy: true,
         serviceName: DEFAULT_PROXY_SERVICE,
         proxyPrefix: DEFAULT_PROXY_PREFIX,
     };
@@ -110,8 +126,24 @@ function parseServerOptions(argv) {
             continue;
         }
 
+        if (arg === '--neo-web-port') {
+            options.neoWebPort = normalizeNeoWebPort(readOptionValue(argv, index, '--neo-web-port'));
+            index += 1;
+            continue;
+        }
+
+        if (arg.indexOf('--neo-web-port=') === 0) {
+            options.neoWebPort = normalizeNeoWebPort(arg.substring('--neo-web-port='.length));
+            continue;
+        }
+
         if (arg === '--proxy') {
             options.proxy = true;
+            continue;
+        }
+
+        if (arg === '--no-proxy') {
+            options.proxy = false;
             continue;
         }
 
@@ -142,10 +174,12 @@ function parseServerOptions(argv) {
 }
 
 module.exports = {
+    DEFAULT_NEO_WEB_PORT,
     DEFAULT_PORT,
     DEFAULT_PROXY_PREFIX,
     DEFAULT_PROXY_SERVICE,
     loadTemplate,
+    normalizeNeoWebPort,
     normalizeProxyPrefix,
     normalizeProxyService,
     parsePort,

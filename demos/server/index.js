@@ -21,12 +21,20 @@ try {
     port = serverOptions.port;
 } catch (error) {
     console.println(`Error: ${error.message}`);
-    console.println('Usage: server.js [--port <port>] [--proxy] [--service-name <name>] [--proxy-prefix <prefix>]');
+    console.println('Usage: server.js [--port <port>] [--no-proxy] [--service-name <name>] [--proxy-prefix <prefix>] [--neo-web-port <port>]');
     process.exit(1);
+}
+
+function directUrl() {
+    return `http://127.0.0.1:${port}/`;
 }
 
 function proxyPublicPath() {
     return `/web/services/${serverOptions.serviceName}${serverOptions.proxyPrefix}`;
+}
+
+function proxyUrl() {
+    return `http://127.0.0.1:${serverOptions.neoWebPort}${proxyPublicPath()}`;
 }
 
 function registerProxy() {
@@ -42,7 +50,7 @@ function registerProxy() {
         }
 
         proxyRegistered = true;
-        console.println(`proxy ready: ${proxyPublicPath()}`);
+        console.println(`proxy connection: ${proxyUrl()}`);
     });
 }
 
@@ -91,9 +99,12 @@ server.get('/todo', (ctx) => {
 
 server.serve((result) => {
     console.println(`server started ${result.network} ${result.address}`);
+    console.println(`direct connection: ${directUrl()}`);
 
     if (serverOptions.proxy) {
         registerProxy();
+    } else {
+        console.println('proxy connection: disabled');
     }
 });
 

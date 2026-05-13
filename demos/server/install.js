@@ -138,7 +138,6 @@ client.install({
 	executable: serverPath,
 	args: [
 		'--port', String(options.port),
-		'--proxy',
 		'--service-name', options.serviceName,
 		'--proxy-prefix', options.proxyPrefix,
 	],
